@@ -96,9 +96,14 @@ func (b *TelegramBot) GetMe() (TGetMe, error) {
 	return v, nil
 }
 
-func (b *TelegramBot) GetUpdate(offset int64) (TGetUpdate, error) {
-	url := b.methodURL("getMe")
-	payload := strings.NewReader(fmt.Sprintf("{\"offset\":%v,\"limit\":null,\"timeout\":null}", offset))
+type getUpdatesOffset int64
+
+func (b *TelegramBot) GetUpdates(offset *getUpdatesOffset) (TGetUpdate, error) {
+	url := b.methodURL("getUpdates")
+	var payload *strings.Reader
+	if offset != nil {
+		payload = strings.NewReader(fmt.Sprintf("{\"offset\":%v,\"limit\":null,\"timeout\":null}", *offset))
+	}
 	body, _ := post(url, payload)
 	var v TGetUpdate
 	json.Unmarshal(body, &v)
