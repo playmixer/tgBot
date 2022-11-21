@@ -1,4 +1,4 @@
-package main
+package tgBot
 
 import (
 	"encoding/json"
